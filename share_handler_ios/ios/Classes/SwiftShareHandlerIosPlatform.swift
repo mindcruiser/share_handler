@@ -92,7 +92,7 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
     // Reference: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623112-application
     public func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         if (hasMatchingSchemePrefix(url: url)) {
-            return handleUrl(url: url, setInitialData: false)
+            return handleUrl(url: url, setInitialData: true)
         }
         return false
     }
@@ -238,7 +238,32 @@ public class SwiftShareHandlerIosPlatform: NSObject, FlutterPlugin, FlutterStrea
         if let media = media {
             if #available(iOS 11.0, *) {
                 let groupName = INSpeakableString(spokenPhrase: media.speakableGroupName ?? "Unknown Contact")
-                let sendMessageIntent = INSendMessageIntent(recipients: nil, outgoingMessageType: INOutgoingMessageType.outgoingMessageText, content: nil, speakableGroupName: groupName, conversationIdentifier: media.conversationIdentifier, serviceName: media.serviceName, sender: nil, attachments: nil)
+                var sendMessageIntent: INSendMessageIntent
+                if #available(iOS 14, *) {
+                    // Use the new initializer with additional parameters in iOS 14 and later
+                    sendMessageIntent = INSendMessageIntent(
+                        recipients: nil,
+                        outgoingMessageType: .outgoingMessageText,
+                        content: nil,
+                        speakableGroupName: groupName,
+                        conversationIdentifier: media.conversationIdentifier,
+                        serviceName: media.serviceName,
+                        sender: nil,
+                        attachments: nil
+                    )
+                } else {
+                    // Use the old initializer without `conversationIdentifier` and `serviceName` for versions below iOS 14
+                    sendMessageIntent = INSendMessageIntent(
+                        recipients: nil,
+                        content: nil,
+                        speakableGroupName: groupName,
+                        // `conversationIdentifier` and `serviceName` are not supported below iOS 14, so they are omitted or set to nil
+                        conversationIdentifier: nil,
+                        serviceName: nil,
+                        sender: nil
+                    )
+                }
+
 
                 if #available(iOS 12.0, *) {
                     // Add the user's avatar to the intent.
