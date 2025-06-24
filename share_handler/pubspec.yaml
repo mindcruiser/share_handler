@@ -29,9 +29,12 @@ dependencies:
   share_handler_android: ^0.0.9
   # share_handler_android:
   #   path: ../share_handler_android
-  share_handler_ios: ^0.0.15
-  # share_handler_ios:
-  #   path: ../share_handler_ios
+#  share_handler_ios: ^0.0.15
+  share_handler_ios:
+    git:
+      url: https://github.com/mindcruiser/share_handler.git
+      path: share_handler_ios
+      ref: mc/open_url
   # share_handler_linux:
   #   path: ../share_handler_linux 
   # share_handler_macos:
