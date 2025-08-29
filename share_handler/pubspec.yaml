@@ -34,7 +34,7 @@ dependencies:
     git:
       url: https://github.com/mindcruiser/share_handler.git
       path: share_handler_ios
-      ref: mc/open_url
+      ref: v0.0.15-ios
   # share_handler_linux:
   #   path: ../share_handler_linux 
   # share_handler_macos:
